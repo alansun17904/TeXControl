@@ -5,16 +5,27 @@
 
 
 import os
+import re
 import sys, getopt, argparse
 import glob
+import shutil
+
 
 parser = argparse.ArgumentParser(description='A linker for TeXControl.')
 
 # Creating a new project.
-psub = parser.add_subparsers(title='project', help='Project management.', dest='command')
+psub = parser.add_subparsers(title='commands', help='Project management.', dest='command')
 pname = psub.add_parser('project', help='Create a new project.')
 pname.add_argument('name', help='Name of project.')
 
+# Creating a new chapter.
+cname = psub.add_parser('create', help='Create a new chapter.')
+cname.add_argument('filename', help='Name of the TeX file.')
+cname.add_argument('title', help='Title for the chapter.')
+cname.add_argument('template', help='Template TeX file for new chapter.')
+cname.add_argument('tags', nargs='+', help='Name of tags for the new chapter.')
+
+# View tags of a project.
 parser.add_argument('--viewtags', action='store_true', help='See all avaliable tags.')
 parser.add_argument('-title', help='Title for the newly linked file.')
 parser.add_argument('-tags', nargs='+', help='Chapters with these tags will be linked.')
@@ -55,15 +66,39 @@ def create_project(name):
 	# Make the project hidden files: storing tag maps
 	os.mkdir(f'{name}/main')
 	os.mkdir(f'{name}/templates')
+	os.mkdir(f'{name}/templates/stys')
 	os.mkdir(f'{name}/.txctrl')	
 	sys.exit(0)
+
+def create_chapter(filename, title, template, tags):
+	# Create chapter subdirectory.
+	os.mkdir(filename)
+	os.mkdir(f'{filename}/static')
+	shutil.copytree('templates/stys/', f'{filename}/stys')
+	# Create tags hidden files
+	for tag in tags:
+		f = open(f'{filename}/.txctrl-{tag}', 'w+')
+		f.close()
+	# Read template file
+	tf = open(f'templates/{template}.tex', 'r')
+	template = tf.read()
+	tf.close()
+	# Copy the template file into the current file and change the name.
+	template = re.sub('\title\{.*\}', f'\title{{{title}}}', template)
+	f = open(f'{filename}/{filename}.tex', 'w+')
+	f.write(template)
+	f.close()
 
 def main():
 	args = parse_args()
 	# Create project
-	if args.command and args.command == 'project':
-		create_project(args.name)	
+	if args.command: 
+		if args.command == 'project':
+			create_project(args.name)	
+		elif args.command == 'create':
+			create_chapter(args.filename, args.title, args.template, args.tags)
 	# View all tags
+	
 	elif args.viewtags:
 		viewtags()
 	sys.exit(0)	
