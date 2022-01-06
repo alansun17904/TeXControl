@@ -3,7 +3,6 @@ Here, we discuss some key requirements and features for the program as well as t
 high-level design of the program.
 
 ## Language 
-- *Project*: a directory taht represents one TeX project.
 - *Chapter*: a subdirectory in the project directory that represents an independent 
 TeX project. It can be compiled indepedently. Many of these chapter may form an 
 entire project.
@@ -46,7 +45,7 @@ file) must be specified.
 
 **Viewing all tags**
 ```shell
-txctrl [chpt filename] --viewtags
+txctrl viewtags [chpt filename] 
 ```
 Here, we note that if the name of a chapter is given, then this command will only
 display the tags in this chapter. Otherwise, it will show the users all tha tags in the project.
