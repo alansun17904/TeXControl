@@ -17,7 +17,7 @@ You can start by cloning the repository.
 git clone https://github.com/alansun17904/TeXControl.git 
 ```
 
-Then descending into the newly cloned directory and running the installation script. 
+Then descending into the newly cloned directory and run the installation script. 
 ```bash
 cd TeXControl
 ./install.sh
