@@ -7,7 +7,7 @@ import shutil
 from .parser import TeXBuilder, TeXParser
 
 
-def link(tags, chpts, TOR, TNOT, CNOT, ALL):
+def link(tags, chpts, TOR, TNOT, CNOT, ALL, template):
 	# Load metadata
 	fp = open('.txctrl/meta.json', 'r')
 	meta = json.load(fp)
